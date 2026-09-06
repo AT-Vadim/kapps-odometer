@@ -1,0 +1,12 @@
+{
+  "name": "kapps-odometer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A persistent per-car iRacing odometer for Kapps Custom Overlay.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node tests/accounting.cjs"
+  },
+  "engines": { "node": ">=18" }
+}

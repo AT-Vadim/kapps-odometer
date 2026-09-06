@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const api=require('../src/odometer.js');
+const frame={DriverInfo:{Drivers:[{CarIdx:2,CarID:42,CarScreenName:'Test car'}]},WeekendInfo:{SessionID:3,SubSessionID:4,TrackID:5,SimMode:'full'},PlayerCarIdx:2,SessionTime:0,SessionNum:0,Speed:20,IsOnTrack:true,IsOnTrackCar:true,IsReplayPlaying:false,IsInGarage:false,PlayerCarTowTime:0};
+const sample=api.normalize(frame);assert.equal(sample.key,'car:42');assert.ok(sample.driving);
+let prev=null,total=0;for(let i=0;i<=200;i++){const r=api.integrate(prev,{...sample,time:i/20},i*50);total+=r.meters;prev=r.previous;}assert.ok(Math.abs(total-200)<1e-8);
+assert.equal(api.integrate(prev,{...sample,time:10},10000).meters,0);
+assert.equal(api.integrate(prev,{...sample,key:'car:1',time:10.1},10100).meters,0);
+assert.equal(api.integrate(prev,{...sample,session:'new',time:10.1},10100).meters,0);
+assert.equal(api.integrate(prev,{...sample,time:15},15000).meters,0);
+assert.equal(api.integrate(prev,{...sample,time:9},10100).meters,0);
+assert.equal(api.integrate(prev,{...sample,time:10.1,driving:false},10100).previous,null);
+for(const flag of [{IsReplayPlaying:true},{IsInGarage:true},{PlayerCarTowTime:10},{IsOnTrack:false},{IsOnTrackCar:false},{Speed:NaN},{Speed:201}])assert.equal(api.normalize({...frame,...flag}).driving,false);
+assert.equal(api.normalize({...frame,Speed:-20}).speed,20);
+assert.throws(()=>api.validate({version:1,cars:{'car:42':{name:'Car',meters:-2}}}));
+assert.equal(api.validate({version:1,cars:{}}).version,1);
+console.log('Kapps accounting checks passed: identity, distance, duplicate frames, car/session switches, gaps, replay/tow/garage, reverse, validation.');
