@@ -126,6 +126,14 @@ window.createOdometerRenderer = function(meter){
    if(frame)cancelAnimationFrame(frame);frame=null;clearCells();
    displayed=target=latest.meters;lastInput=0;paint(latest.meters,true);
  };
+ render.setBackground=function(color,opacity){
+   var hex=/^#[0-9a-f]{6}$/i.test(color)?color:'#0e1317';
+   var alpha=Number.isFinite(opacity)?Math.max(0,Math.min(100,opacity))/100:.7;
+   var rgb=[1,3,5].map(function(start){return parseInt(hex.slice(start,start+2),16);});
+   meter.style.setProperty('--meter-background','rgba('+rgb.join(',')+','+alpha+')');
+   meter.style.setProperty('--meter-border','rgba(255,255,255,'+(alpha*.16)+')');
+   meter.style.setProperty('--meter-shadow','rgba(0,0,0,'+(alpha*.286)+')');
+ };
  render.setFlickerGate=function(gate){rareGate=gate;};
  render.destroy=function(){destroyed=true;if(frame)cancelAnimationFrame(frame);clearTimeout(rareTimer);clearCells();};
  render.getStyle=function(){return style;};

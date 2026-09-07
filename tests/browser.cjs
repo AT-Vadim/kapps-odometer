@@ -8,6 +8,8 @@ const fs=require('node:fs');
  function send(method,params={}){return new Promise((r,j)=>{const key=++id;pending.set(key,{r,j});socket.send(JSON.stringify({id:key,method,params}));});}
  async function run(expression){const result=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;}
  await send('Runtime.enable');
+ await send('Network.enable');await send('Network.setBlockedURLs',{urls:['ws://127.0.0.1:8182/*']});
+ await send('Emulation.setDeviceMetricsOverride',{width:1000,height:850,deviceScaleFactor:1,mobile:false});
  await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?manage=1'});await new Promise(r=>setTimeout(r,500));
  assert.equal(await run('typeof KappsOdometer.start'),'function');
  const tested=await run(`(async()=>{
@@ -30,6 +32,7 @@ const fs=require('node:fs');
    return {distance,takeover,restored:restored.cars[key].meters-start,afterImport};
  })()`);
  assert.ok(Math.abs(tested.distance-4)<1e-6);assert.ok(Math.abs(tested.takeover-6)<1e-6);assert.ok(Math.abs(tested.restored-6)<1e-6);assert.ok(Math.abs(tested.afterImport-6)<1e-6);
+ await send('Emulation.setDeviceMetricsOverride',{width:370,height:100,deviceScaleFactor:1,mobile:false});
  await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?demo=1'});await new Promise(r=>setTimeout(r,800));
  assert.equal(await run('document.querySelectorAll("#car,#state,#status").length'),0);
  assert.equal(await run('getComputedStyle(document.querySelector(".meter")).backgroundColor'),'rgba(14, 19, 23, 0.7)');

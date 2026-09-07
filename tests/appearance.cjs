@@ -8,6 +8,8 @@ const fs=require('node:fs');
  function send(method,params={}){return new Promise((r,j)=>{const key=++id;pending.set(key,{r,j});socket.send(JSON.stringify({id:key,method,params}));});}
  async function run(expression){const result=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;}
  await send('Runtime.enable');
+ await send('Network.enable');await send('Network.setBlockedURLs',{urls:['ws://127.0.0.1:8182/*']});
+ await send('Emulation.setDeviceMetricsOverride',{width:1000,height:850,deviceScaleFactor:1,mobile:false});
  await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?manage=1'});await new Promise(r=>setTimeout(r,500));
  assert.equal(await run('document.querySelectorAll("#appearance-style option").length'),3);
  await run(`document.getElementById('appearance-style').value='electronic';document.getElementById('appearance-style').dispatchEvent(new Event('change'));`);
@@ -47,6 +49,7 @@ const fs=require('node:fs');
  assert.equal(result.first,true);assert.equal(result.blocked,false);assert.equal(result.allowed,true);assert.ok(result.recorded[0]>=300000&&result.recorded[0]<600000);
  const totalsAfter=await run('KappsOdometer.openDatabase({version:1,cars:{}}).then(KappsOdometer.readTotals)');assert.deepEqual(totalsAfter,totalsBefore);
  const shot=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync('docs/settings.png',Buffer.from(shot.data,'base64'));
+ await send('Emulation.setDeviceMetricsOverride',{width:370,height:100,deviceScaleFactor:1,mobile:false});
  for(const style of ['electronic','mechanical']){
    await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?demo=1&style='+style});await new Promise(r=>setTimeout(r,350));
    await send('Emulation.setDefaultBackgroundColorOverride',{color:{r:0,g:0,b:0,a:0}});

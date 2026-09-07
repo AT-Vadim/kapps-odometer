@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — 2026-09-07
+
+- Added a background colour picker, hex input and 0–100% opacity control to statistics.
+- Added background reset and automatic synchronization between open widgets.
+- The odometer now fits its Kapps window while preserving proportions; statistics do not scale.
+- Existing style-only preferences migrate to the original background defaults.
+
+
 ## 0.2.1 — 2026-09-07
 
 - Removed labels below the mechanical number wheels.

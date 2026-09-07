@@ -7,6 +7,7 @@ const version = JSON.parse(read('package.json')).version;
 const boot = `
 (function () {
   var render = window.createOdometerRenderer();
+  if (new URLSearchParams(location.search).get('manage') !== '1') window.fitOdometerToWindow(document.querySelector('.meter'));
   render({meters: 0, car_key: null});
   if (new URLSearchParams(location.search).get('demo') === '1') {
     var meters = 1234500;
@@ -18,7 +19,7 @@ const boot = `
   KappsOdometer.start(render, {version: 1, cars: {}});
 })();
 `;
-const script = [read('src/odometer.js'), read('src/appearance.js'), read('src/renderer.js'), boot].join('\n');
+const script = [read('src/odometer.js'), read('src/appearance.js'), read('src/renderer.js'), read('src/viewport.js'), boot].join('\n');
 if (script.includes('</script')) throw Error('Unexpected closing script tag in source');
 const html = read('src/template.html').replace('</style>', read('src/appearance.css') + '\n</style>').replace('<!-- SCRIPTS -->',
   `<!-- Kapps Odometer ${version} | MIT License | See LICENSE -->\n<script>\n${script}\n</script>`);

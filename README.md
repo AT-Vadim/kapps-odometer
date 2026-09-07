@@ -7,11 +7,11 @@ It runs as a Kapps Custom Overlay: no Python, extra application, subscription,
 cloud account, or build step is required for the widget itself. You need an
 existing working installation of Kapps and iRacing on Windows.
 
-[Download v0.2.1](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.2.1/Odometer-Kapps-v0.2.1.zip) · [Инструкция на русском](README.ru.md)
+[Download v0.3.0](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.3.0/Odometer-Kapps-v0.3.0.zip) · [Инструкция на русском](README.ru.md)
 
 ## Install
 
-1. Download **Odometer-Kapps-v0.2.1.zip** from this repository's **Releases** page.
+1. Download **Odometer-Kapps-v0.3.0.zip** from this repository's **Releases** page.
    Use the named install ZIP, rather than GitHub's automatically generated source ZIP.
 2. In Kapps, open **Settings → Apps Folder**. If you already use custom widgets,
    open that folder. Otherwise create a folder such as `Documents\KappsApps`,
@@ -26,10 +26,11 @@ existing working installation of Kapps and iRacing on Windows.
      README.ru.md
      LICENSE
      CHANGELOG.md
+     docs/
    ```
 
    **Do not select the Odometer subfolder itself as Apps Folder.** Do not leave
-   an extra `Odometer-Kapps-v0.2.1` folder between Apps Folder and Odometer.
+   an extra `Odometer-Kapps-v0.3.0` folder between Apps Folder and Odometer.
 4. In **Racing Overlay → Add Custom Overlay**, use:
 
    ```text
@@ -52,7 +53,8 @@ automatically open Racing Overlay when Kapps starts.
 - Liveries and race numbers do not create separate odometers. Separate Legacy
   models with different CarIDs get separate totals.
 - Displays kilometres with one decimal place; digits roll every 100 metres.
-- Shows only the number and `km`, with a dark background at **70% opacity**.
+- Keeps the driving view free of status labels; the default dark background has
+  **70% opacity**, with adjustable colour and opacity.
 - Counts reverse driving, pit-lane driving and off-track travel while in the car.
 - Pauses recording outside the car, in the garage, during towing or replays,
   and when telemetry is stale.
@@ -85,9 +87,30 @@ widgets in the same profile within about one second. The setting applies to all 
 <img src="docs/electronic.png" alt="Electronic pixel odometer" width="370">
 <img src="docs/mechanical.png" alt="Mechanical odometer" width="370">
 
-All styles retain the 70% opaque outer background. System reduced-motion
+All styles default to a 70% opaque outer background; colour and opacity are adjustable. System reduced-motion
 preferences disable blinking and animated transitions. Appearance preferences
 are separate from mileage; JSON mileage backups do not include style settings.
+
+## Background and window size
+
+1. Temporarily change the Custom Overlay URL **inside Kapps** to
+   `http://127.0.0.1:8182/Odometer/?manage=1`.
+2. Enlarge the window and enable interaction with it. Under **Odometer appearance**,
+   choose a **Background colour** with the picker or hex input, then set
+   **Background opacity** from **0% (transparent)** to **100% (opaque)**.
+3. Restore `http://127.0.0.1:8182/Odometer/` and resize the window in Kapps.
+
+The preview updates immediately. Settings save automatically and reach open
+widgets in the same Kapps profile within about one second. **Reset background**
+restores the original dark colour and 70% opacity without changing your style.
+Only the outer panel background changes; the digits and mechanical wheel faces
+keep their own opacity.
+
+Resize the Custom Overlay window directly in **Kapps**. The odometer automatically
+fits the width and height allocated to it, scales up or down, and stays centred
+without distorting its proportions. When the window has a different aspect ratio,
+the unused space is transparent. This applies **only to the odometer view**;
+the statistics/settings page keeps its normal layout and scrolling.
 
 ## Storage, backup and restore
 
@@ -144,10 +167,11 @@ errors stop successful recording rather than silently switching to temporary dat
 
 ## Compatibility and testing
 
-**v0.2.1** release. The WebSocket protocol was checked against Kapps
+**v0.3.0** release. The WebSocket protocol was checked against Kapps
 **1.24.38**, and a connection to its local server was verified. Automated checks
 cover distance accounting, car changes, replay/tow/garage filtering, persistence,
-single-writer transactions, writer takeover, imports and the rendered widget.
+single-writer transactions, writer takeover, imports, appearance persistence,
+background transparency and proportional fitting across all three styles.
 Full validation while driving in a live iRacing session and inside every Kapps
 display mode is still pending. Reports with Kapps version and reproduction steps
 are welcome; do not attach account credentials or personal logs unnecessarily.
@@ -190,3 +214,8 @@ create synthetic mileage and replace the preview image.
 Run `node tests/appearance.cjs` in the same disposable browser setup to verify
 style persistence, live updates, continuous wheels, kilometre carry and the
 five-minute rare-flicker cooldown. Start its tab at `/Odometer/?manage=1`.
+
+Use `node tests/background-layout.cjs` with the disposable browser setup to check
+colour/opacity persistence, old-style preference migration, background-only
+transparency, live synchronization and fitting all three styles to different
+viewport sizes.

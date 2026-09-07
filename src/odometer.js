@@ -88,7 +88,7 @@
    }
    document.body.appendChild(panel);
    if(root.KappsAppearance)root.KappsAppearance.mount(db,panel);
-   function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' вЂ” '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
+   function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' — '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
    function error(e){document.getElementById('message').textContent='Error: '+e.message;}
    document.getElementById('export').onclick=function(){readTotals(db).then(function(totals){var url=URL.createObjectURL(new Blob([JSON.stringify(totals,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='odometer-backup.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},10000);}).catch(error);};
    document.getElementById('import').onclick=function(){document.getElementById('file').click();};

@@ -33,3 +33,21 @@
 @media(prefers-reduced-motion:reduce){.pixel-change,.pixel-rare{animation:none}.wheel .strip.animate{transition:none}}
 
 .meter[data-style="electronic"] .reading{align-items:center}
+
+/* Only the driving viewport is fitted. Statistics retain normal page layout. */
+body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
+.overlay-page #wrap{position:fixed;inset:0;overflow:hidden}
+.overlay-page #wrap>.meter{position:absolute;margin:0;transform-origin:0 0}
+.meter{background:var(--meter-background,rgba(14,19,23,.7));border-color:var(--meter-border,#ffffff1c);box-shadow:0 7px 22px var(--meter-shadow,#0003)}
+.background-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px 22px;margin:20px 0}
+.background-field{display:flex;flex-direction:column;gap:10px;min-width:0}
+.background-field label{font-size:13px;margin:0;display:flex;justify-content:space-between;gap:8px}
+.background-field output{color:#d8ebdf;font-variant-numeric:tabular-nums}
+.colour-inputs{display:flex;gap:10px;align-items:center}
+#background-color{width:46px;height:36px;padding:3px;border:1px solid #50606a;background:#253138;border-radius:6px;cursor:pointer}
+#background-hex{width:100px;padding:9px;color:#e3ecee;background:#253138;border:1px solid #50606a;border-radius:6px;font:13px Consolas,monospace}
+#background-hex:invalid{border-color:#cc8f7a}
+#background-opacity{width:100%;height:36px;margin:0;accent-color:#a8ddba;cursor:pointer}
+#reset-background{justify-self:start;padding:8px 12px}
+.background-controls>.note{grid-column:1/-1;margin:0}
+@media(max-width:560px){.background-controls{grid-template-columns:minmax(0,1fr)}.preview-page{padding:24px 14px}.appearance-settings{padding:16px}.appearance-preview{padding:12px}}
