@@ -8,7 +8,7 @@ root = Path(__file__).resolve().parent.parent
 version = json.loads((root / 'package.json').read_text())['version']
 destination = root / 'dist' / f'Odometer-Kapps-v{version}.zip'
 destination.parent.mkdir(exist_ok=True)
-files = ['Odometer/index.html', 'README.md', 'README.ru.md', 'LICENSE', 'CHANGELOG.md', 'docs/preview.png']
+files = ['Odometer/index.html', 'README.md', 'README.ru.md', 'LICENSE', 'CHANGELOG.md', 'docs/preview.png', 'docs/electronic.png', 'docs/mechanical.png']
 with zipfile.ZipFile(destination, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for name in files:
         info = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0))

@@ -2,8 +2,46 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>iRacing · Car odometer</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;background:transparent;color:#f1f5f5;font-family:Segoe UI,Arial,sans-serif}body{padding:8px}.meter{width:350px;padding:15px 18px 12px;border:1px solid #ffffff1c;border-radius:12px;background:rgba(14,19,23,.70);box-shadow:0 7px 22px #0003;position:relative;overflow:hidden}.meter:before{content:"";position:absolute;left:0;top:21px;bottom:21px;width:3px;background:#a8ddba;border-radius:2px}.reading{display:flex;align-items:baseline;gap:10px}.digits{display:flex;align-items:flex-end;font-family:Consolas,monospace;font-size:36px;font-weight:400;line-height:44px;height:44px;font-variant-numeric:tabular-nums}.digit{width:22px;height:44px;overflow:hidden;position:relative}.strip{display:block;transform:translateY(0);will-change:transform}.strip.animate{transition:transform 260ms cubic-bezier(.2,.7,.25,1)}.strip span{display:block;height:44px;line-height:44px;text-align:center}.digit:last-child{color:#a8ddba}.point{width:12px;text-align:center}.group{margin-left:7px}.unit{font-size:12px;color:#8c999e;letter-spacing:.08em}.preview-page{background:#171e24;min-height:100vh;padding:70px 30px}.preview-wrap{max-width:740px;margin:0 auto}.intro{margin-bottom:32px}.intro small{color:#a8ddba;font-size:10px;letter-spacing:.25em}.intro h1{font-weight:400;font-size:32px;letter-spacing:-.03em;margin:15px 0 10px}.intro p{font-size:14px;color:#99a7ad;line-height:1.6;max-width:570px}.demo-controls{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}button{background:#242f36;border:1px solid #3a484e;border-radius:7px;color:#d5e0e1;font:12px Segoe UI,sans-serif;padding:10px 15px;cursor:pointer}button:hover{border-color:#a8ddba}.note{font-size:12px;color:#7e9098;line-height:1.7;margin-top:24px}@media(prefers-reduced-motion:reduce){.strip.animate{transition:none}}
+/* Pixel display: a 5 by 7 matrix for each numeral. */
+.meter[data-style="electronic"]:before,.meter[data-style="mechanical"]:before{display:none}
+.meter[data-style="electronic"] .digits{gap:5px;align-items:center;background:linear-gradient(#101909,#080f04);padding:6px 8px;height:48px;border-radius:3px;box-shadow:inset 0 0 8px #000,0 0 0 1px #92b82332}
+.pixel-digit{display:grid;grid-template-columns:repeat(5,3px);grid-template-rows:repeat(7,3px);gap:2px;width:23px;height:33px}
+.pixel{border-radius:50%;background:#71832a12;width:3px;height:3px}
+.pixel.lit{background:#d5ff63;box-shadow:0 0 3px #c3fc35c9,0 0 7px #adf12662}
+.pixel-point{width:3px;height:3px;margin:0 1px 2px;align-self:flex-end;background:#d5ff63;box-shadow:0 0 4px #c3fc35}
+.pixel-change{animation:pixel-change 180ms linear}
+.pixel-rare{animation:pixel-rare 320ms linear}
+@keyframes pixel-change{0%,30%{opacity:.15}55%{opacity:1}75%{opacity:.45}100%{opacity:1}}
+@keyframes pixel-rare{0%,100%{opacity:1}15%,35%{opacity:.08}50%,70%{opacity:.85}80%{opacity:.2}}
+.meter[data-style="electronic"] .unit{color:#b4c77c}
+/* Mechanical wheels. The last wheel has 12 rows so its 9 -> 0 wrap is seamless. */
+.meter[data-style="mechanical"]{padding:11px 16px 9px}
+.meter[data-style="mechanical"] .reading{align-items:flex-start;gap:8px}
+.meter[data-style="mechanical"] .digits{height:61px;align-items:flex-start;gap:3px}
+.wheel-column{display:flex;flex-direction:column;align-items:center;gap:4px}
+.wheel{position:relative;width:33px;height:42px;overflow:hidden;border-radius:3px;background:linear-gradient(#080b0d,#1c252a 48%,#0b1013);border:1px solid #ffffff21;box-shadow:0 1px 2px #0009,inset 0 0 4px #000}
+.wheel:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#0009,transparent 35%,transparent 65%,#0009);border-top:1px solid #ffffff0a}
+.wheel .strip span{height:42px;line-height:42px;color:#e1e7e8;font-family:Consolas,monospace;font-size:31px;font-weight:bold;text-shadow:0 1px 2px #000}
+.wheel .strip.animate{transition:transform 320ms cubic-bezier(.22,.7,.3,1)}
+.wheel-label{font:8px/11px Segoe UI,Arial,sans-serif;color:#8d9b9e;white-space:nowrap;letter-spacing:.02em}
+.wheel-column:last-child .wheel{background:linear-gradient(#86918c,#dce0cd 48%,#8c9890)}
+.wheel-column:last-child .strip span{color:#15211c;text-shadow:0 1px #ffffff42}
+.wheel-column:last-child .wheel-label{color:#c0d9bb}
+.wheel-separator{width:5px;height:42px}
+.meter[data-style="mechanical"] .unit{padding-top:27px}
+.appearance-settings{margin:26px 0;padding:22px;background:#11191d;border:1px solid #334047;border-radius:12px}
+.appearance-settings h2{margin:0 0 18px;font-size:20px;font-weight:500}
+.appearance-settings label{margin-right:14px;color:#a9b6bb}
+.appearance-settings select{font:14px Segoe UI,Arial,sans-serif;background:#253138;color:#e3ecee;border:1px solid #50606a;border-radius:6px;padding:9px 13px;max-width:100%}
+.appearance-preview{margin:20px 0 10px;padding:20px;background:repeating-conic-gradient(#293239 0 25%,#212a30 0 50%) 0/24px 24px;border-radius:8px;overflow:auto}
+.appearance-help{color:#b1c0c5;font-size:13px;line-height:1.6;max-width:590px;min-height:42px}
+.appearance-message{font-size:12px;color:#b6dcbc;min-height:16px}
+@media(prefers-reduced-motion:reduce){.pixel-change,.pixel-rare{animation:none}.wheel .strip.animate{transition:none}}
+
+.meter[data-style="electronic"] .reading{align-items:center}
+
 </style></head><body><div id="wrap"><section class="meter" aria-label="Car odometer"><div class="reading"><div class="digits" id="digits" aria-label="0.0 kilometres"></div><span class="unit">km</span></div></section></div>
-<!-- Kapps Odometer 0.1.0 | MIT License | See LICENSE -->
+<!-- Kapps Odometer 0.2.0 | MIT License | See LICENSE -->
 <script>
 /* MIT licensed. Built into Odometer/index.html; no runtime dependencies. */
 (function (root) {
@@ -87,8 +125,15 @@
  function manage(db){
    document.body.className='preview-page';document.getElementById('wrap').innerHTML='';
    var panel=document.createElement('main');panel.className='preview-wrap';panel.innerHTML='<h1>Per-car mileage</h1><p>Back up and restore mileage. This page does not record distance.</p><div class="demo-controls"><button id="export">Download backup</button><button id="import">Import JSON</button><input id="file" type="file" accept=".json,application/json" hidden></div><p id="message"></p><div id="cars"></div><p class="note">Storage belongs to the Kapps browser profile at 127.0.0.1:8182. Open this page in the same Kapps profile as your overlay. Import merges records and keeps the larger total for each car.</p>';
+   if((navigator.language||'').toLowerCase().indexOf('ru')===0){
+     panel.querySelector('h1').textContent='Статистика по автомобилям';
+     panel.querySelector('p').textContent='Накопленный пробег, оформление и резервные копии. Эта страница сама не считает дистанцию.';
+     panel.querySelector('#export').textContent='Скачать копию';panel.querySelector('#import').textContent='Импорт JSON';
+     panel.querySelector('.note').textContent='Открывайте эту страницу в том же профиле Kapps, где работает одометр. Импорт объединяет записи и сохраняет больший пробег каждой машины.';
+   }
    document.body.appendChild(panel);
-   function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' — '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
+   if(root.KappsAppearance)root.KappsAppearance.mount(db,panel);
+   function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' вЂ” '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
    function error(e){document.getElementById('message').textContent='Error: '+e.message;}
    document.getElementById('export').onclick=function(){readTotals(db).then(function(totals){var url=URL.createObjectURL(new Blob([JSON.stringify(totals,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='odometer-backup.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},10000);}).catch(error);};
    document.getElementById('import').onclick=function(){document.getElementById('file').click();};
@@ -99,6 +144,7 @@
    if(location.hostname==='localhost'){location.replace(location.href.replace('localhost','127.0.0.1'));return;}
    openDatabase(seed).then(function(db){
      if(new URLSearchParams(location.search).get('manage')==='1'){manage(db);return;}
+     if(root.KappsAppearance)root.KappsAppearance.watch(db,render);
      var collector=new Collector(db,Date.now()+'-'+Math.random()),data={},latest=null,freshAt=0,lastTime=null,ws;
      function clear(){data={};latest=null;lastTime=null;collector.previous=null;}
      function connect(){
@@ -121,38 +167,193 @@
  if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.KappsOdometer=api;
 })(typeof window!=='undefined'?window:globalThis);
 
-
-window.createOdometerRenderer = function(){
+/* Shared appearance preferences live beside mileage, without altering totals. */
+(function(root){
  'use strict';
- var digits=document.getElementById('digits');
- var cells=[],shown='',active=null;
+ var styles=['minimal','electronic','mechanical'];
+ function read(db){return new Promise(function(resolve,reject){
+   var req=db.transaction('state','readonly').objectStore('state').get('appearance');
+   req.onsuccess=function(){var value=req.result||{};resolve({style:styles.indexOf(value.style)>=0?value.style:'minimal'});};req.onerror=function(){reject(req.error);};
+ });}
+ function save(db,style){return new Promise(function(resolve,reject){
+   if(styles.indexOf(style)<0){reject(Error('Unknown appearance style'));return;}
+   var tx=db.transaction('state','readwrite');tx.objectStore('state').put({style:style},'appearance');
+   tx.oncomplete=resolve;tx.onabort=tx.onerror=function(){reject(tx.error);};
+ });}
+ // The transaction enforces one rare effect per storage profile in any 5-minute window.
+ function claimFlicker(db,now){return new Promise(function(resolve,reject){
+   var allowed=false,tx=db.transaction('state','readwrite'),store=tx.objectStore('state'),req=store.get('pixelFlickerAt');
+   req.onsuccess=function(){var last=req.result;if(last==null||now-last>=300000){store.put(now,'pixelFlickerAt');allowed=true;}};
+   tx.oncomplete=function(){resolve(allowed);};tx.onabort=tx.onerror=function(){reject(tx.error);};
+ });}
+ function watch(db,render){
+   var disposed=false,busy=false;
+   render.setFlickerGate(function(){return claimFlicker(db,Date.now());});
+   function refresh(){if(busy||disposed)return;busy=true;read(db).then(function(value){if(!disposed)render.setStyle(value.style);}).catch(function(e){console.error('Odometer appearance:',e);}).finally(function(){busy=false;});}
+   refresh();var timer=setInterval(refresh,1000);
+   return function(){disposed=true;clearInterval(timer);};
+ }
+ function mount(db,panel){
+   var ru=(navigator.language||'').toLowerCase().indexOf('ru')===0;
+   var section=document.createElement('section');section.className='appearance-settings';
+   section.innerHTML='<h2>'+(ru?'Оформление одометра':'Odometer appearance')+'</h2><label for="appearance-style">'+(ru?'Стиль':'Style')+'</label><select id="appearance-style"><option value="minimal">'+(ru?'Минималистичный':'Minimal')+'</option><option value="electronic">'+(ru?'Электронный · пиксели':'Electronic · pixels')+'</option><option value="mechanical">'+(ru?'Механический · колёсики':'Mechanical · wheels')+'</option></select><p class="appearance-help"></p><div class="appearance-preview"><section class="meter" aria-label="Appearance preview"><div class="reading"><div class="digits"></div><span class="unit">km</span></div></section></div><p class="note">'+(ru?'Предпросмотр на вымышленных данных. Выбор сохраняется автоматически для всех машин и открытых виджетов в этом профиле Kapps.':'Preview uses synthetic mileage. Selection is saved automatically for all cars and open widgets in this Kapps profile.')+'</p><p class="appearance-message" role="status"></p>';
+   panel.insertBefore(section,panel.querySelector('.demo-controls'));
+   var select=section.querySelector('select'),message=section.querySelector('.appearance-message'),render=root.createOdometerRenderer(section.querySelector('.meter'));
+   var unwatch=watch(db,render),saving=false,meters=1299700,last=performance.now();
+   function help(style){section.querySelector('.appearance-help').textContent=({
+     minimal:ru?'Плавная прокрутка цифр каждые 100 метров.':'Digits roll every 100 metres.',
+     electronic:ru?'Изменившаяся цифра кратко мигает. Редкое подмигивание части цифры — раз в 5–10 минут, не чаще одного раза за 5 минут.':'Changed digits blink briefly. A small part of one digit flickers every 5–10 minutes, never more than once per 5 minutes.',
+     mechanical:ru?'Колёсико 100 м вращается непрерывно по пройденному расстоянию. Километры переключаются после накопления целого километра.':'The 100 m wheel rolls continuously with measured distance. Kilometre wheels advance when a whole kilometre is reached.'
+   })[style];}
+   read(db).then(function(value){select.value=value.style;render.setStyle(value.style);help(value.style);}).catch(function(e){message.textContent=e.message;});
+   select.onchange=function(){var style=select.value;if(saving)return;saving=true;select.disabled=true;
+     save(db,style).then(function(){render.setStyle(style);help(style);message.textContent=ru?'Сохранено':'Saved';}).catch(function(e){message.textContent=e.message;}).finally(function(){saving=false;select.disabled=false;});
+   };
+   render({meters:meters,car_key:'appearance-preview'});
+   var timer=setInterval(function(){var now=performance.now();meters+=30*Math.min((now-last)/1000,.25);last=now;render({meters:meters,car_key:'appearance-preview'});},100);
+   window.addEventListener('pagehide',function(){clearInterval(timer);unwatch();render.destroy();},{once:true});
+ }
+ root.KappsAppearance={read:read,save:save,watch:watch,mount:mount,claimFlicker:claimFlicker};
+})(window);
+
+/* Three renderers share the same measured distance; visuals never change totals. */
+window.createOdometerRenderer = function(meter){
+ 'use strict';
+ meter=meter||document.querySelector('.meter');
+ var digits=meter.querySelector('.digits'),cells=[],shown='',active=null,style='minimal';
+ var latest={meters:0,car_key:null},displayed=0,from=0,target=0,startAt=0,duration=110,lastInput=0,frame=null,destroyed=false;
+ var rareTimer=null,rareGate=function(){return Promise.resolve(true);};
+ var reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+ var glyphs=[
+ ['01110','10001','10011','10101','11001','10001','01110'],
+ ['00100','01100','00100','00100','00100','00100','01110'],
+ ['01110','10001','00001','00010','00100','01000','11111'],
+ ['11110','00001','00001','01110','00001','00001','11110'],
+ ['00010','00110','01010','10010','11111','00010','00010'],
+ ['11111','10000','10000','11110','00001','00001','11110'],
+ ['01110','10000','10000','11110','10001','10001','01110'],
+ ['11111','00001','00010','00100','01000','01000','01000'],
+ ['01110','10001','10001','01110','10001','10001','01110'],
+ ['01110','10001','10001','01111','00001','00001','01110']
+ ];
+ function textFor(meters){var value=Math.floor(meters/100);return String(Math.floor(value/10)).padStart(6,'0')+'.'+value%10;}
+ function clearCells(){cells.forEach(function(c){if(c)clearTimeout(c.timer);});cells=[];digits.innerHTML='';shown='';}
+ function makeStrip(el,text,height){
+   var strip=document.createElement('span');strip.className='strip';
+   var a=document.createElement('span'),b=document.createElement('span');a.textContent=text;b.textContent=text;
+   strip.appendChild(a);strip.appendChild(b);el.appendChild(strip);
+   return {strip:strip,a:a,b:b,timer:null,height:height};
+ }
+ function roll(cell,value,previous,instant){
+   clearTimeout(cell.timer);cell.strip.classList.remove('animate');cell.strip.style.transform='translateY(0)';
+   cell.a.textContent=instant?value:previous;cell.b.textContent=value;
+   if(!instant&&!reduced.matches){
+     void cell.strip.offsetHeight;cell.strip.classList.add('animate');cell.strip.style.transform='translateY(-'+cell.height+'px)';
+     cell.timer=setTimeout(function(){cell.strip.classList.remove('animate');cell.a.textContent=value;cell.strip.style.transform='translateY(0)';},style==='mechanical'?340:280);
+   }
+ }
+ function labelFor(power){
+   if(power===-1)return '100 m';
+   if(power>=3)return String(Math.pow(10,power-3))+'k km';
+   return String(Math.pow(10,power))+' km';
+ }
  function build(text){
-   digits.innerHTML='';cells=[];
+   clearCells();
    for(var i=0;i<text.length;i++){
      var el=document.createElement('span');
-     if(text[i]==='.') {el.className='point';el.textContent='.';cells.push(null);}
-     else {el.className='digit'+(i===text.length-5?' group':'');var strip=document.createElement('span');strip.className='strip';var a=document.createElement('span'),b=document.createElement('span');a.textContent=text[i];b.textContent=text[i];strip.appendChild(a);strip.appendChild(b);el.appendChild(strip);cells.push({strip:strip,a:a,b:b,timer:null});}
+     if(text[i]==='.'){
+       el.className=style==='electronic'?'pixel-point':style==='mechanical'?'wheel-separator':'point';
+       if(style==='minimal')el.textContent='.';
+       cells.push(null);digits.appendChild(el);continue;
+     }
+     if(style==='electronic'){
+       el.className='pixel-digit';var dots=[];
+       for(var d=0;d<35;d++){var dot=document.createElement('i');dot.className='pixel';el.appendChild(dot);dots.push(dot);}
+       cells.push({el:el,dots:dots,timer:null});
+     }else if(style==='mechanical'){
+       el.className='wheel-column';var wheel=document.createElement('span');wheel.className='wheel';el.appendChild(wheel);
+       var label=document.createElement('span');label.className='wheel-label';label.textContent=labelFor(text.length-3-i);el.appendChild(label);
+       if(i===text.length-1){
+         label.textContent='100 m';var strip=document.createElement('span');strip.className='strip';wheel.appendChild(strip);
+         for(var row=-1;row<=10;row++){var num=document.createElement('span');num.textContent=(row+10)%10;strip.appendChild(num);}
+         cells.push({strip:strip,continuous:true,timer:null});
+       }else cells.push(makeStrip(wheel,text[i],42));
+     }else{
+       el.className='digit'+(i===text.length-5?' group':'');cells.push(makeStrip(el,text[i],44));
+     }
      digits.appendChild(el);
    }
  }
- function render(data){
-   var value=Math.floor(Math.max(0,Number(data.meters)||0)/100);
-   var text=String(Math.floor(value/10)).padStart(6,'0')+'.'+value%10;
-   var switched=active!==data.car_key;
-   if(!cells.length||text.length!==shown.length){build(text);switched=true;}
+ function paint(meters,instant){
+   var text=textFor(meters);
+   if(!cells.length||shown.length!==text.length){build(text);instant=true;}
    for(var i=0;i<text.length;i++){
-     var cell=cells[i];if(!cell)continue;
-     if(switched){clearTimeout(cell.timer);cell.strip.classList.remove('animate');cell.strip.style.transform='translateY(0)';cell.a.textContent=text[i];cell.b.textContent=text[i];}
-     else if(text[i]!==shown[i]){
-       clearTimeout(cell.timer);cell.strip.classList.remove('animate');cell.strip.style.transform='translateY(0)';cell.a.textContent=shown[i];cell.b.textContent=text[i];
-       void cell.strip.offsetHeight;cell.strip.classList.add('animate');cell.strip.style.transform='translateY(-44px)';
-       (function(c,d){c.timer=setTimeout(function(){c.strip.classList.remove('animate');c.a.textContent=d;c.strip.style.transform='translateY(0)';},280);})(cell,text[i]);
-     }
+     var c=cells[i];if(!c)continue;
+     if(style==='electronic'){
+       if(instant||text[i]!==shown[i]){
+         var pattern=glyphs[Number(text[i])].join('');
+         c.dots.forEach(function(dot,n){dot.className='pixel'+(pattern[n]==='1'?' lit':'');});
+         c.el.classList.remove('pixel-change');
+         if(!instant&&!reduced.matches){void c.el.offsetHeight;c.el.classList.add('pixel-change');}
+       }
+     }else if(c.continuous){
+       var phase=(meters/100)%10;
+       c.strip.style.transform='translateY(-'+((1+phase)*42)+'px)';
+       c.strip.dataset.position=String(phase);
+     }else if(instant||text[i]!==shown[i])roll(c,text[i],shown[i],instant);
    }
-   active=data.car_key;shown=text;
-   digits.setAttribute('aria-label',(value/10).toFixed(1)+' kilometres');
+   shown=text;digits.setAttribute('aria-label',(Math.floor(meters/100)/10).toFixed(1)+' kilometres');
  }
-
+ function animate(now){
+   frame=null;if(destroyed)return;
+   var progress=Math.min(1,Math.max(0,(now-startAt)/duration));
+   displayed=from+(target-from)*progress;paint(displayed,false);
+   if(progress<1)frame=requestAnimationFrame(animate);
+ }
+ function render(data){
+   if(destroyed)return;
+   var meters=Number(data.meters);if(!Number.isFinite(meters)||meters<0)return;
+   var switched=active!==data.car_key;active=data.car_key;latest={meters:meters,car_key:data.car_key};
+   if(style!=='mechanical'){paint(meters,switched);displayed=meters;target=meters;return;}
+   var now=performance.now(),gap=lastInput?now-lastInput:100;lastInput=now;
+   if(switched||meters<displayed||meters-displayed>200||gap>1000||reduced.matches){
+     if(frame)cancelAnimationFrame(frame);frame=null;displayed=target=meters;paint(meters,true);return;
+   }
+   if(meters===target)return;
+   if(frame){cancelAnimationFrame(frame);frame=null;}
+   from=displayed;target=meters;startAt=now;duration=Math.max(80,Math.min(250,gap*1.15));
+   frame=requestAnimationFrame(animate);
+ }
+ function scheduleRare(){
+   clearTimeout(rareTimer);if(destroyed)return;
+   rareTimer=setTimeout(function(){
+     if(style==='electronic'&&!reduced.matches&&!document.hidden){
+       rareGate().then(function(allowed){
+         if(!allowed||style!=='electronic'||destroyed)return;
+         var candidates=cells.filter(function(c){return c&&c.dots;});
+         if(!candidates.length)return;
+         var cell=candidates[Math.floor(Math.random()*candidates.length)];
+         var litRows=[];
+         for(var row=0;row<7;row++)if(cell.dots.slice(row*5,row*5+5).some(function(dot){return dot.classList.contains('lit');}))litRows.push(row);
+         var chosen=litRows[Math.floor(Math.random()*litRows.length)];
+         cell.dots.slice(chosen*5,chosen*5+5).forEach(function(dot){if(dot.classList.contains('lit'))dot.classList.add('pixel-rare');});
+         setTimeout(function(){cell.dots.forEach(function(dot){dot.classList.remove('pixel-rare');});},350);
+       }).catch(function(e){console.error('Odometer pixel effect:',e);});
+     }
+     scheduleRare();
+   },300000+Math.floor(Math.random()*300000));
+ }
+ render.setStyle=function(value){
+   if(['minimal','electronic','mechanical'].indexOf(value)<0)value='minimal';
+   if(value===style&&cells.length)return;
+   style=value;meter.dataset.style=style;
+   if(frame)cancelAnimationFrame(frame);frame=null;clearCells();
+   displayed=target=latest.meters;lastInput=0;paint(latest.meters,true);
+ };
+ render.setFlickerGate=function(gate){rareGate=gate;};
+ render.destroy=function(){destroyed=true;if(frame)cancelAnimationFrame(frame);clearTimeout(rareTimer);clearCells();};
+ render.getStyle=function(){return style;};
+ meter.dataset.style=style;scheduleRare();
  return render;
 };
 
@@ -162,8 +363,9 @@ window.createOdometerRenderer = function(){
   render({meters: 0, car_key: null});
   if (new URLSearchParams(location.search).get('demo') === '1') {
     var meters = 1234500;
+    render.setStyle(new URLSearchParams(location.search).get('style') || 'minimal');
     render({meters: meters, car_key: 'demo'});
-    setInterval(function () { meters += 100; render({meters: meters, car_key: 'demo'}); }, 2000);
+    setInterval(function () { meters += 3; render({meters: meters, car_key: 'demo'}); }, 100);
     return;
   }
   KappsOdometer.start(render, {version: 1, cars: {}});

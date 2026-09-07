@@ -7,11 +7,11 @@ It runs as a Kapps Custom Overlay: no Python, extra application, subscription,
 cloud account, or build step is required for the widget itself. You need an
 existing working installation of Kapps and iRacing on Windows.
 
-[Download v0.1.0](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.1.0/Odometer-Kapps-v0.1.0.zip) · [Инструкция на русском](README.ru.md)
+[Download v0.2.0](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.2.0/Odometer-Kapps-v0.2.0.zip) · [Инструкция на русском](README.ru.md)
 
 ## Install
 
-1. Download **Odometer-Kapps-v0.1.0.zip** from this repository's **Releases** page.
+1. Download **Odometer-Kapps-v0.2.0.zip** from this repository's **Releases** page.
    Use the named install ZIP, rather than GitHub's automatically generated source ZIP.
 2. In Kapps, open **Settings → Apps Folder**. If you already use custom widgets,
    open that folder. Otherwise create a folder such as `Documents\KappsApps`,
@@ -29,7 +29,7 @@ existing working installation of Kapps and iRacing on Windows.
    ```
 
    **Do not select the Odometer subfolder itself as Apps Folder.** Do not leave
-   an extra `Odometer-Kapps-v0.1.0` folder between Apps Folder and Odometer.
+   an extra `Odometer-Kapps-v0.2.0` folder between Apps Folder and Odometer.
 4. In **Racing Overlay → Add Custom Overlay**, use:
 
    ```text
@@ -37,7 +37,7 @@ existing working installation of Kapps and iRacing on Windows.
    URL:  http://127.0.0.1:8182/Odometer/
    ```
 
-5. Give the widget approximately **370 × 95 px** and position it on your screen.
+5. Give the widget approximately **370 × 100 px** and position it on your screen.
 6. Open Racing Overlay, enter your car in a live iRacing session, and drive.
 
 Apps Folder serves HTML files; it does not launch EXE/CMD files. Once added,
@@ -62,6 +62,32 @@ telemetry logs, analytics, remote scripts or fonts. Distance is approximate:
 it integrates speed over simulation time. Missing data is not reconstructed,
 so stalls or long gaps can cause a small undercount. Previous iRacing sessions
 are not imported automatically.
+
+## Appearance styles
+
+Open the statistics/management page in the same Kapps profile:
+`http://127.0.0.1:8182/Odometer/?manage=1`.
+Choose **Minimal**, **Electronic · pixels**, or **Mechanical · wheels** under
+**Odometer appearance**. The animated preview uses synthetic mileage and does
+not change your totals. Selection saves automatically and reaches other open
+widgets in the same profile within about one second. The setting applies to all cars.
+
+- **Minimal:** the original rolling-digit display.
+- **Electronic:** a yellow-green 5 × 7 dot matrix. Each changed digit briefly
+  blinks. A small part of one numeral flickers at random 5–10 minute intervals;
+  a shared, persistent cooldown prevents more than one rare effect per five
+  minutes, even with multiple windows or after a reload.
+- **Mechanical:** labelled numeral wheels. The light **100 m** wheel rotates
+  continuously between numerals using fractional measured distance. Kilometre
+  wheels roll smoothly only when the corresponding full kilometre/digit is
+  reached. The wheels stop when mileage stops; they do not extrapolate distance.
+
+<img src="docs/electronic.png" alt="Electronic pixel odometer" width="370">
+<img src="docs/mechanical.png" alt="Labelled mechanical odometer" width="370">
+
+All styles retain the 70% opaque outer background. System reduced-motion
+preferences disable blinking and animated transitions. Appearance preferences
+are separate from mileage; JSON mileage backups do not include style settings.
 
 ## Storage, backup and restore
 
@@ -118,7 +144,7 @@ errors stop successful recording rather than silently switching to temporary dat
 
 ## Compatibility and testing
 
-Initial **v0.1.0** release. The WebSocket protocol was checked against Kapps
+**v0.2.0** release. The WebSocket protocol was checked against Kapps
 **1.24.38**, and a connection to its local server was verified. Automated checks
 cover distance accounting, car changes, replay/tow/garage filtering, persistence,
 single-writer transactions, writer takeover, imports and the rendered widget.
@@ -160,3 +186,7 @@ Browser storage checks (Node.js 22+): serve the repository on 127.0.0.1:8192,
 open `/Odometer/?manage=1` in a disposable Chrome profile with remote debugging
 on port 9228, then run `node tests/browser.cjs`. Use a test profile: these checks
 create synthetic mileage and replace the preview image.
+
+Run `node tests/appearance.cjs` in the same disposable browser setup to verify
+style persistence, live updates, continuous wheels, kilometre carry and the
+five-minute rare-flicker cooldown. Start its tab at `/Odometer/?manage=1`.

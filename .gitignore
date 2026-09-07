@@ -8,3 +8,5 @@ __pycache__/
 data/
 odometer-backup*.json
 *.zip
+
+docs/settings.png

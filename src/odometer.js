@@ -80,8 +80,15 @@
  function manage(db){
    document.body.className='preview-page';document.getElementById('wrap').innerHTML='';
    var panel=document.createElement('main');panel.className='preview-wrap';panel.innerHTML='<h1>Per-car mileage</h1><p>Back up and restore mileage. This page does not record distance.</p><div class="demo-controls"><button id="export">Download backup</button><button id="import">Import JSON</button><input id="file" type="file" accept=".json,application/json" hidden></div><p id="message"></p><div id="cars"></div><p class="note">Storage belongs to the Kapps browser profile at 127.0.0.1:8182. Open this page in the same Kapps profile as your overlay. Import merges records and keeps the larger total for each car.</p>';
+   if((navigator.language||'').toLowerCase().indexOf('ru')===0){
+     panel.querySelector('h1').textContent='Статистика по автомобилям';
+     panel.querySelector('p').textContent='Накопленный пробег, оформление и резервные копии. Эта страница сама не считает дистанцию.';
+     panel.querySelector('#export').textContent='Скачать копию';panel.querySelector('#import').textContent='Импорт JSON';
+     panel.querySelector('.note').textContent='Открывайте эту страницу в том же профиле Kapps, где работает одометр. Импорт объединяет записи и сохраняет больший пробег каждой машины.';
+   }
    document.body.appendChild(panel);
-   function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' — '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
+   if(root.KappsAppearance)root.KappsAppearance.mount(db,panel);
+   function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' вЂ” '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
    function error(e){document.getElementById('message').textContent='Error: '+e.message;}
    document.getElementById('export').onclick=function(){readTotals(db).then(function(totals){var url=URL.createObjectURL(new Blob([JSON.stringify(totals,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='odometer-backup.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},10000);}).catch(error);};
    document.getElementById('import').onclick=function(){document.getElementById('file').click();};
@@ -92,6 +99,7 @@
    if(location.hostname==='localhost'){location.replace(location.href.replace('localhost','127.0.0.1'));return;}
    openDatabase(seed).then(function(db){
      if(new URLSearchParams(location.search).get('manage')==='1'){manage(db);return;}
+     if(root.KappsAppearance)root.KappsAppearance.watch(db,render);
      var collector=new Collector(db,Date.now()+'-'+Math.random()),data={},latest=null,freshAt=0,lastTime=null,ws;
      function clear(){data={};latest=null;lastTime=null;collector.previous=null;}
      function connect(){

@@ -8,6 +8,7 @@ const fs=require('node:fs');
  function send(method,params={}){return new Promise((r,j)=>{const key=++id;pending.set(key,{r,j});socket.send(JSON.stringify({id:key,method,params}));});}
  async function run(expression){const result=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(result.exceptionDetails)throw Error(JSON.stringify(result.exceptionDetails));return result.result.value;}
  await send('Runtime.enable');
+ await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?manage=1'});await new Promise(r=>setTimeout(r,500));
  assert.equal(await run('typeof KappsOdometer.start'),'function');
  const tested=await run(`(async()=>{
    var a=KappsOdometer,db=await a.openDatabase({version:1,cars:{}});
