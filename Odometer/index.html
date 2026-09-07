@@ -17,16 +17,14 @@
 /* Mechanical wheels. The last wheel has 12 rows so its 9 -> 0 wrap is seamless. */
 .meter[data-style="mechanical"]{padding:11px 16px 9px}
 .meter[data-style="mechanical"] .reading{align-items:flex-start;gap:8px}
-.meter[data-style="mechanical"] .digits{height:61px;align-items:flex-start;gap:3px}
+.meter[data-style="mechanical"] .digits{height:44px;align-items:flex-start;gap:3px}
 .wheel-column{display:flex;flex-direction:column;align-items:center;gap:4px}
 .wheel{position:relative;width:33px;height:42px;overflow:hidden;border-radius:3px;background:linear-gradient(#080b0d,#1c252a 48%,#0b1013);border:1px solid #ffffff21;box-shadow:0 1px 2px #0009,inset 0 0 4px #000}
 .wheel:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#0009,transparent 35%,transparent 65%,#0009);border-top:1px solid #ffffff0a}
 .wheel .strip span{height:42px;line-height:42px;color:#e1e7e8;font-family:Consolas,monospace;font-size:31px;font-weight:bold;text-shadow:0 1px 2px #000}
 .wheel .strip.animate{transition:transform 320ms cubic-bezier(.22,.7,.3,1)}
-.wheel-label{font:8px/11px Segoe UI,Arial,sans-serif;color:#8d9b9e;white-space:nowrap;letter-spacing:.02em}
 .wheel-column:last-child .wheel{background:linear-gradient(#86918c,#dce0cd 48%,#8c9890)}
 .wheel-column:last-child .strip span{color:#15211c;text-shadow:0 1px #ffffff42}
-.wheel-column:last-child .wheel-label{color:#c0d9bb}
 .wheel-separator{width:5px;height:42px}
 .meter[data-style="mechanical"] .unit{padding-top:27px}
 .appearance-settings{margin:26px 0;padding:22px;background:#11191d;border:1px solid #334047;border-radius:12px}
@@ -41,7 +39,7 @@
 .meter[data-style="electronic"] .reading{align-items:center}
 
 </style></head><body><div id="wrap"><section class="meter" aria-label="Car odometer"><div class="reading"><div class="digits" id="digits" aria-label="0.0 kilometres"></div><span class="unit">km</span></div></section></div>
-<!-- Kapps Odometer 0.2.0 | MIT License | See LICENSE -->
+<!-- Kapps Odometer 0.2.1 | MIT License | See LICENSE -->
 <script>
 /* MIT licensed. Built into Odometer/index.html; no runtime dependencies. */
 (function (root) {
@@ -252,11 +250,6 @@ window.createOdometerRenderer = function(meter){
      cell.timer=setTimeout(function(){cell.strip.classList.remove('animate');cell.a.textContent=value;cell.strip.style.transform='translateY(0)';},style==='mechanical'?340:280);
    }
  }
- function labelFor(power){
-   if(power===-1)return '100 m';
-   if(power>=3)return String(Math.pow(10,power-3))+'k km';
-   return String(Math.pow(10,power))+' km';
- }
  function build(text){
    clearCells();
    for(var i=0;i<text.length;i++){
@@ -272,9 +265,8 @@ window.createOdometerRenderer = function(meter){
        cells.push({el:el,dots:dots,timer:null});
      }else if(style==='mechanical'){
        el.className='wheel-column';var wheel=document.createElement('span');wheel.className='wheel';el.appendChild(wheel);
-       var label=document.createElement('span');label.className='wheel-label';label.textContent=labelFor(text.length-3-i);el.appendChild(label);
        if(i===text.length-1){
-         label.textContent='100 m';var strip=document.createElement('span');strip.className='strip';wheel.appendChild(strip);
+         var strip=document.createElement('span');strip.className='strip';wheel.appendChild(strip);
          for(var row=-1;row<=10;row++){var num=document.createElement('span');num.textContent=(row+10)%10;strip.appendChild(num);}
          cells.push({strip:strip,continuous:true,timer:null});
        }else cells.push(makeStrip(wheel,text[i],42));

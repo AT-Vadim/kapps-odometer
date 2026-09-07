@@ -34,11 +34,6 @@ window.createOdometerRenderer = function(meter){
      cell.timer=setTimeout(function(){cell.strip.classList.remove('animate');cell.a.textContent=value;cell.strip.style.transform='translateY(0)';},style==='mechanical'?340:280);
    }
  }
- function labelFor(power){
-   if(power===-1)return '100 m';
-   if(power>=3)return String(Math.pow(10,power-3))+'k km';
-   return String(Math.pow(10,power))+' km';
- }
  function build(text){
    clearCells();
    for(var i=0;i<text.length;i++){
@@ -54,9 +49,8 @@ window.createOdometerRenderer = function(meter){
        cells.push({el:el,dots:dots,timer:null});
      }else if(style==='mechanical'){
        el.className='wheel-column';var wheel=document.createElement('span');wheel.className='wheel';el.appendChild(wheel);
-       var label=document.createElement('span');label.className='wheel-label';label.textContent=labelFor(text.length-3-i);el.appendChild(label);
        if(i===text.length-1){
-         label.textContent='100 m';var strip=document.createElement('span');strip.className='strip';wheel.appendChild(strip);
+         var strip=document.createElement('span');strip.className='strip';wheel.appendChild(strip);
          for(var row=-1;row<=10;row++){var num=document.createElement('span');num.textContent=(row+10)%10;strip.appendChild(num);}
          cells.push({strip:strip,continuous:true,timer:null});
        }else cells.push(makeStrip(wheel,text[i],42));

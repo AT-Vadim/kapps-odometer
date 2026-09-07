@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 — 2026-09-07
+
+- Removed labels below the mechanical number wheels.
+- Reduced the mechanical display height to remove the unused label space.
+- Updated the preview image and installation downloads.
+
+
 ## 0.2.0 — 2026-09-07
 
 - Added electronic 5 × 7 pixel digits with a blink on each changed numeral.

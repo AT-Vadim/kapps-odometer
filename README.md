@@ -7,11 +7,11 @@ It runs as a Kapps Custom Overlay: no Python, extra application, subscription,
 cloud account, or build step is required for the widget itself. You need an
 existing working installation of Kapps and iRacing on Windows.
 
-[Download v0.2.0](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.2.0/Odometer-Kapps-v0.2.0.zip) · [Инструкция на русском](README.ru.md)
+[Download v0.2.1](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.2.1/Odometer-Kapps-v0.2.1.zip) · [Инструкция на русском](README.ru.md)
 
 ## Install
 
-1. Download **Odometer-Kapps-v0.2.0.zip** from this repository's **Releases** page.
+1. Download **Odometer-Kapps-v0.2.1.zip** from this repository's **Releases** page.
    Use the named install ZIP, rather than GitHub's automatically generated source ZIP.
 2. In Kapps, open **Settings → Apps Folder**. If you already use custom widgets,
    open that folder. Otherwise create a folder such as `Documents\KappsApps`,
@@ -29,7 +29,7 @@ existing working installation of Kapps and iRacing on Windows.
    ```
 
    **Do not select the Odometer subfolder itself as Apps Folder.** Do not leave
-   an extra `Odometer-Kapps-v0.2.0` folder between Apps Folder and Odometer.
+   an extra `Odometer-Kapps-v0.2.1` folder between Apps Folder and Odometer.
 4. In **Racing Overlay → Add Custom Overlay**, use:
 
    ```text
@@ -77,13 +77,13 @@ widgets in the same profile within about one second. The setting applies to all 
   blinks. A small part of one numeral flickers at random 5–10 minute intervals;
   a shared, persistent cooldown prevents more than one rare effect per five
   minutes, even with multiple windows or after a reload.
-- **Mechanical:** labelled numeral wheels. The light **100 m** wheel rotates
+- **Mechanical:** unlabelled numeral wheels. The light **100 m** wheel rotates
   continuously between numerals using fractional measured distance. Kilometre
   wheels roll smoothly only when the corresponding full kilometre/digit is
   reached. The wheels stop when mileage stops; they do not extrapolate distance.
 
 <img src="docs/electronic.png" alt="Electronic pixel odometer" width="370">
-<img src="docs/mechanical.png" alt="Labelled mechanical odometer" width="370">
+<img src="docs/mechanical.png" alt="Mechanical odometer" width="370">
 
 All styles retain the 70% opaque outer background. System reduced-motion
 preferences disable blinking and animated transitions. Appearance preferences
@@ -144,7 +144,7 @@ errors stop successful recording rather than silently switching to temporary dat
 
 ## Compatibility and testing
 
-**v0.2.0** release. The WebSocket protocol was checked against Kapps
+**v0.2.1** release. The WebSocket protocol was checked against Kapps
 **1.24.38**, and a connection to its local server was verified. Automated checks
 cover distance accounting, car changes, replay/tow/garage filtering, persistence,
 single-writer transactions, writer takeover, imports and the rendered widget.
