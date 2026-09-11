@@ -11,7 +11,7 @@ const fs=require('node:fs');
  await send('Network.enable');await send('Network.setBlockedURLs',{urls:['ws://127.0.0.1:8182/*']});
  await send('Emulation.setDeviceMetricsOverride',{width:1000,height:850,deviceScaleFactor:1,mobile:false});
  await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?manage=1'});await new Promise(r=>setTimeout(r,500));
- assert.equal(await run('document.querySelectorAll("#appearance-style option").length'),3);
+ assert.equal(await run('document.querySelectorAll("#appearance-style option").length'),4);
  await run(`document.getElementById('appearance-style').value='electronic';document.getElementById('appearance-style').dispatchEvent(new Event('change'));`);
  await new Promise(r=>setTimeout(r,250));
  assert.equal(await run('document.querySelector(".appearance-preview .meter").dataset.style'),'electronic');
@@ -48,9 +48,23 @@ const fs=require('node:fs');
  assert.equal(result.cascade,'001000');assert.equal(result.switched,5);assert.equal(result.flashing,1);assert.equal(result.pixels,7);
  assert.equal(result.first,true);assert.equal(result.blocked,false);assert.equal(result.allowed,true);assert.ok(result.recorded[0]>=300000&&result.recorded[0]<600000);
  const totalsAfter=await run('KappsOdometer.openDatabase({version:1,cars:{}}).then(KappsOdometer.readTotals)');assert.deepEqual(totalsAfter,totalsBefore);
+ // Selecting the new style applies its palette while keeping the user's opacity.
+ await run(`document.getElementById('background-opacity').value='35';document.getElementById('background-opacity').dispatchEvent(new Event('input'));document.getElementById('appearance-style').value='iracing';document.getElementById('appearance-style').dispatchEvent(new Event('change'));`);
+ await new Promise(r=>setTimeout(r,300));await send('Page.reload');await new Promise(r=>setTimeout(r,500));
+ assert.equal(await run('document.getElementById("appearance-style").value'),'iracing');
+ assert.equal(await run('document.getElementById("background-hex").value'),'#232633');
+ assert.equal(await run('document.getElementById("background-opacity").value'),'35');
+ assert.equal(await run('getComputedStyle(document.querySelector(".appearance-preview .meter")).backgroundColor'),'rgba(35, 38, 51, 0.35)');
+ assert.equal(await run('getComputedStyle(document.querySelector(".appearance-preview .digit:last-child")).backgroundColor'),'rgb(255, 203, 0)');
+ assert.equal(await run('document.querySelector(".appearance-preview .point").textContent'),'.');
+ assert.ok(await run('document.querySelector(".setup-help").textContent.includes("Apply")'));
+ await run(`document.getElementById('reset-background').click()`);await new Promise(r=>setTimeout(r,200));
+ assert.equal(await run('document.getElementById("background-hex").value'),'#232633');
+ assert.equal(await run('document.getElementById("background-opacity").value'),'70');
+ assert.deepEqual(await run('KappsOdometer.openDatabase({version:1,cars:{}}).then(KappsOdometer.readTotals)'),totalsBefore);
  const shot=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync('docs/settings.png',Buffer.from(shot.data,'base64'));
  await send('Emulation.setDeviceMetricsOverride',{width:370,height:100,deviceScaleFactor:1,mobile:false});
- for(const style of ['electronic','mechanical']){
+ for(const style of ['electronic','mechanical','iracing']){
    await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?demo=1&style='+style});await new Promise(r=>setTimeout(r,350));
    await send('Emulation.setDefaultBackgroundColorOverride',{color:{r:0,g:0,b:0,a:0}});
    const shot=await send('Page.captureScreenshot',{format:'png',clip:{x:0,y:0,width:370,height:100,scale:2}});fs.writeFileSync('docs/'+style+'.png',Buffer.from(shot.data,'base64'));

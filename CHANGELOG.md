@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — 2026-09-11
+
+- Added a fourth, iRacing classic style matching the supplied standings palette.
+- Selecting iRacing applies charcoal #232633 while preserving background opacity.
+- Added in-page setup help and detailed English/Russian Kapps interaction instructions.
+- Clarified window focus, Edit versus Apply, and Ctrl+K for Open in iRacing.
+- Existing mileage, three earlier styles and background customization are preserved.
+
 ## 0.3.0 — 2026-09-07
 
 - Added a background colour picker, hex input and 0–100% opacity control to statistics.

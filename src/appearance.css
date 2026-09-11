@@ -51,3 +51,16 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
 #reset-background{justify-self:start;padding:8px 12px}
 .background-controls>.note{grid-column:1/-1;margin:0}
 @media(max-width:560px){.background-controls{grid-template-columns:minmax(0,1fr)}.preview-page{padding:24px 14px}.appearance-settings{padding:16px}.appearance-preview{padding:12px}}
+
+/* Classic iRacing palette sampled from the supplied standings reference. */
+.meter[data-style="iracing"]{width:350px;padding:10px 15px 10px 18px;border-radius:2px;border:1px solid var(--meter-border,#ffffff1c);background:var(--meter-background,rgba(35,38,51,.7));box-shadow:0 3px 10px var(--meter-shadow,#0003)}
+.meter[data-style="iracing"]:before{display:block;top:0;bottom:0;width:3px;border-radius:0;background:#ffcb00}
+.meter[data-style="iracing"] .reading{align-items:center;justify-content:space-between;gap:12px}
+.meter[data-style="iracing"] .digits{gap:1px;font-family:Arial,"Segoe UI",sans-serif;font-size:35px;font-weight:700;color:#eeeeee;text-shadow:0 1px 1px #0005}
+.meter[data-style="iracing"] .digit{width:27px}
+.meter[data-style="iracing"] .group{margin-left:6px}
+.meter[data-style="iracing"] .point{width:12px;color:#eeeeee}
+.meter[data-style="iracing"] .digit:last-child{width:31px;background:#ffcb00;color:#171821;border-radius:2px;text-shadow:none}
+.meter[data-style="iracing"] .unit{font-family:Arial,"Segoe UI",sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:#ffcb00}
+.setup-help{margin:18px 0;padding:14px 18px;border-left:3px solid #ffcb00;background:#232633;color:#eeeeee;font-size:13px;line-height:1.6}
+.setup-help p{margin:0 0 8px}.setup-help p:last-child{margin:0}

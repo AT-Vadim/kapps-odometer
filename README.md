@@ -7,11 +7,11 @@ It runs as a Kapps Custom Overlay: no Python, extra application, subscription,
 cloud account, or build step is required for the widget itself. You need an
 existing working installation of Kapps and iRacing on Windows.
 
-[Download v0.3.0](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.3.0/Odometer-Kapps-v0.3.0.zip) · [Инструкция на русском](README.ru.md)
+[Download v0.4.0](https://github.com/AT-Vadim/kapps-odometer/releases/download/v0.4.0/Odometer-Kapps-v0.4.0.zip) · [Инструкция на русском](README.ru.md)
 
 ## Install
 
-1. Download **Odometer-Kapps-v0.3.0.zip** from this repository's **Releases** page.
+1. Download **Odometer-Kapps-v0.4.0.zip** from this repository's **Releases** page.
    Use the named install ZIP, rather than GitHub's automatically generated source ZIP.
 2. In Kapps, open **Settings → Apps Folder**. If you already use custom widgets,
    open that folder. Otherwise create a folder such as `Documents\KappsApps`,
@@ -30,7 +30,7 @@ existing working installation of Kapps and iRacing on Windows.
    ```
 
    **Do not select the Odometer subfolder itself as Apps Folder.** Do not leave
-   an extra `Odometer-Kapps-v0.3.0` folder between Apps Folder and Odometer.
+   an extra `Odometer-Kapps-v0.4.0` folder between Apps Folder and Odometer.
 4. In **Racing Overlay → Add Custom Overlay**, use:
 
    ```text
@@ -69,11 +69,15 @@ are not imported automatically.
 
 Open the statistics/management page in the same Kapps profile:
 `http://127.0.0.1:8182/Odometer/?manage=1`.
-Choose **Minimal**, **Electronic · pixels**, or **Mechanical · wheels** under
+Choose **Minimal**, **Electronic · pixels**, **Mechanical · wheels**, or
+**iRacing · classic** under
 **Odometer appearance**. The animated preview uses synthetic mileage and does
 not change your totals. Selection saves automatically and reaches other open
 widgets in the same profile within about one second. The setting applies to all cars.
 
+- **iRacing · classic:** the reference standings palette: charcoal panel, bold
+  off-white digits, yellow accent line and highlighted 100 m digit. No extra
+  status labels. Selecting it sets the charcoal background and keeps opacity.
 - **Minimal:** the original rolling-digit display.
 - **Electronic:** a yellow-green 5 × 7 dot matrix. Each changed digit briefly
   blinks. A small part of one numeral flickers at random 5–10 minute intervals;
@@ -84,6 +88,7 @@ widgets in the same profile within about one second. The setting applies to all 
   wheels roll smoothly only when the corresponding full kilometre/digit is
   reached. The wheels stop when mileage stops; they do not extrapolate distance.
 
+<img src="docs/iracing.png" alt="iRacing classic odometer" width="370">
 <img src="docs/electronic.png" alt="Electronic pixel odometer" width="370">
 <img src="docs/mechanical.png" alt="Mechanical odometer" width="370">
 
@@ -95,14 +100,15 @@ are separate from mileage; JSON mileage backups do not include style settings.
 
 1. Temporarily change the Custom Overlay URL **inside Kapps** to
    `http://127.0.0.1:8182/Odometer/?manage=1`.
-2. Enlarge the window and enable interaction with it. Under **Odometer appearance**,
+2. Focus Racing Overlay, resize with **Edit**, then click **Apply**, as explained
+   in **Make the settings page clickable in Kapps** below. Under **Odometer appearance**,
    choose a **Background colour** with the picker or hex input, then set
    **Background opacity** from **0% (transparent)** to **100% (opaque)**.
 3. Restore `http://127.0.0.1:8182/Odometer/` and resize the window in Kapps.
 
 The preview updates immediately. Settings save automatically and reach open
 widgets in the same Kapps profile within about one second. **Reset background**
-restores the original dark colour and 70% opacity without changing your style.
+restores the style's default dark colour and 70% opacity without changing your style.
 Only the outer panel background changes; the digits and mechanical wheel faces
 keep their own opacity.
 
@@ -111,6 +117,45 @@ fits the width and height allocated to it, scales up or down, and stays centred
 without distorting its proportions. When the window has a different aspect ratio,
 the unused space is transparent. This applies **only to the odometer view**;
 the statistics/settings page keeps its normal layout and scrolling.
+
+## Make the settings page clickable in Kapps
+
+`?manage=1` opens the odometer settings, but Kapps controls whether mouse clicks
+reach the page. **Edit** is for moving/resizing; **Apply** finishes that mode
+and allows clicks inside the page while Racing Overlay stays focused.
+
+1. In Kapps → Racing Overlay → your **Odometer Custom Overlay**, temporarily set
+   the URL to `http://127.0.0.1:8182/Odometer/?manage=1`.
+2. For **Open in a Window**, use **Alt+Tab** to select **Racing Overlay**, not the
+   main Kapps settings window or iRacing. The overlay's **Edit** buttons appear.
+3. Click **Edit** on Odometer, drag an edge/corner to roughly **800 × 850 px**
+   (or as large as fits your screen), then click **Apply**. Now click the style
+   selector, colour picker or opacity slider; scroll inside the page if needed.
+   Leaving the widget in **Edit** prevents interaction with those controls.
+4. Select **iRacing · classic**. It applies the charcoal background `#232633`
+   while keeping your opacity. Yellow accents are `#FFCB00`, digits are off-white
+   `#EEEEEE`, and the highlighted decimal uses `#171821` text. You can still
+   customize the background; **Reset background** restores charcoal at 70%
+   for this style. Wait for **Saved** before closing.
+5. Restore `http://127.0.0.1:8182/Odometer/` in the Custom Overlay URL. Focus
+   Racing Overlay again, use **Edit → resize → Apply** to return to the driving
+   size, then switch back to iRacing. The odometer fits its assigned space.
+
+For **Open in iRacing** (the experimental injected overlay), press **Ctrl+K**
+while iRacing is focused to enable Kapps' editing/input mode, then follow
+**Edit → resize → Apply** above. After setup, press **Ctrl+K** again to leave
+that input mode. This shortcut belongs to that Kapps display mode; it is not
+needed for the normal **Open in a Window** workflow.
+
+If clicks pass through, refocus Racing Overlay using **Alt+Tab**. If dragging
+moves/resizes the widget instead of operating controls, click **Apply** first.
+Clicking outside the widgets can make Kapps release focus again. The odometer
+cannot override its host window's click-through behavior.
+
+These steps were checked against the installed **Kapps 1.24.38** window-focus,
+**Edit/Apply** and iframe input handling. Other versions may differ. Keep setup
+in the same Kapps browser profile: opening the URL in regular Chrome/Edge uses
+separate mileage and preferences.
 
 ## Storage, backup and restore
 
@@ -131,7 +176,8 @@ To manage the same data, temporarily change the widget's URL **inside Kapps** to
 http://127.0.0.1:8182/Odometer/?manage=1
 ```
 
-Enlarge the window and enable interaction with it. Use **Download backup** or
+Follow the **Make the settings page clickable in Kapps** section (focus Racing Overlay,
+resize with **Edit**, then click **Apply**). Use **Download backup** or
 **Import JSON**, then restore the normal URL. This management page does not
 record mileage. Opening it in an unrelated Chrome/Edge profile will show that
 browser's data instead of your Kapps data.
@@ -167,11 +213,11 @@ errors stop successful recording rather than silently switching to temporary dat
 
 ## Compatibility and testing
 
-**v0.3.0** release. The WebSocket protocol was checked against Kapps
+**v0.4.0** release. The WebSocket protocol was checked against Kapps
 **1.24.38**, and a connection to its local server was verified. Automated checks
 cover distance accounting, car changes, replay/tow/garage filtering, persistence,
 single-writer transactions, writer takeover, imports, appearance persistence,
-background transparency and proportional fitting across all three styles.
+background transparency and proportional fitting across all four styles.
 Full validation while driving in a live iRacing session and inside every Kapps
 display mode is still pending. Reports with Kapps version and reproduction steps
 are welcome; do not attach account credentials or personal logs unnecessarily.
@@ -217,5 +263,5 @@ five-minute rare-flicker cooldown. Start its tab at `/Odometer/?manage=1`.
 
 Use `node tests/background-layout.cjs` with the disposable browser setup to check
 colour/opacity persistence, old-style preference migration, background-only
-transparency, live synchronization and fitting all three styles to different
+transparency, live synchronization and fitting all four styles to different
 viewport sizes.

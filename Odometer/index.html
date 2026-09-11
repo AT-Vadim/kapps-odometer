@@ -56,8 +56,21 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
 .background-controls>.note{grid-column:1/-1;margin:0}
 @media(max-width:560px){.background-controls{grid-template-columns:minmax(0,1fr)}.preview-page{padding:24px 14px}.appearance-settings{padding:16px}.appearance-preview{padding:12px}}
 
+/* Classic iRacing palette sampled from the supplied standings reference. */
+.meter[data-style="iracing"]{width:350px;padding:10px 15px 10px 18px;border-radius:2px;border:1px solid var(--meter-border,#ffffff1c);background:var(--meter-background,rgba(35,38,51,.7));box-shadow:0 3px 10px var(--meter-shadow,#0003)}
+.meter[data-style="iracing"]:before{display:block;top:0;bottom:0;width:3px;border-radius:0;background:#ffcb00}
+.meter[data-style="iracing"] .reading{align-items:center;justify-content:space-between;gap:12px}
+.meter[data-style="iracing"] .digits{gap:1px;font-family:Arial,"Segoe UI",sans-serif;font-size:35px;font-weight:700;color:#eeeeee;text-shadow:0 1px 1px #0005}
+.meter[data-style="iracing"] .digit{width:27px}
+.meter[data-style="iracing"] .group{margin-left:6px}
+.meter[data-style="iracing"] .point{width:12px;color:#eeeeee}
+.meter[data-style="iracing"] .digit:last-child{width:31px;background:#ffcb00;color:#171821;border-radius:2px;text-shadow:none}
+.meter[data-style="iracing"] .unit{font-family:Arial,"Segoe UI",sans-serif;font-size:15px;font-weight:700;letter-spacing:0;color:#ffcb00}
+.setup-help{margin:18px 0;padding:14px 18px;border-left:3px solid #ffcb00;background:#232633;color:#eeeeee;font-size:13px;line-height:1.6}
+.setup-help p{margin:0 0 8px}.setup-help p:last-child{margin:0}
+
 </style></head><body><div id="wrap"><section class="meter" aria-label="Car odometer"><div class="reading"><div class="digits" id="digits" aria-label="0.0 kilometres"></div><span class="unit">km</span></div></section></div>
-<!-- Kapps Odometer 0.3.0 | MIT License | See LICENSE -->
+<!-- Kapps Odometer 0.4.0 | MIT License | See LICENSE -->
 <script>
 /* MIT licensed. Built into Odometer/index.html; no runtime dependencies. */
 (function (root) {
@@ -147,6 +160,11 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
      panel.querySelector('#export').textContent='Скачать копию';panel.querySelector('#import').textContent='Импорт JSON';
      panel.querySelector('.note').textContent='Открывайте эту страницу в том же профиле Kapps, где работает одометр. Импорт объединяет записи и сохраняет больший пробег каждой машины.';
    }
+   var setup=document.createElement('aside');setup.className='setup-help';
+   setup.innerHTML=(navigator.language||'').toLowerCase().indexOf('ru')===0
+     ? '<p><strong>Как включить управление в Kapps</strong></p><p>В режиме Open in a Window переключитесь на окно Racing Overlay через Alt+Tab. Нажмите Edit на одометре, увеличьте область примерно до 800 × 850 px и нажмите Apply. После Apply можно нажимать элементы этой страницы; окно Racing Overlay должно оставаться активным.</p><p>В режиме Open in iRacing сначала нажмите Ctrl+K, затем увеличьте область через Edit → Apply. После настройки верните URL без ?manage=1 и размер одометра. Если клики не работают, проверьте, что нажали Apply, и снова активируйте Racing Overlay.</p>'
+     : '<p><strong>Enable interaction in Kapps</strong></p><p>With Open in a Window, use Alt+Tab to focus Racing Overlay. Click Edit on the odometer, enlarge it to about 800 × 850 px, then click Apply. After Apply, the controls on this page are clickable; keep Racing Overlay focused.</p><p>With Open in iRacing, first press Ctrl+K, then resize through Edit → Apply. After setup, restore the URL without ?manage=1 and the odometer size. If clicks do not work, check that you clicked Apply and focus Racing Overlay again.</p>';
+   panel.insertBefore(setup,panel.querySelector('.demo-controls'));
    document.body.appendChild(panel);
    if(root.KappsAppearance)root.KappsAppearance.mount(db,panel);
    function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' — '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
@@ -186,7 +204,7 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
 /* Shared appearance preferences live beside mileage, without altering totals. */
 (function(root){
  'use strict';
- var styles=['minimal','electronic','mechanical'];
+ var styles=['minimal','electronic','mechanical','iracing'];
  var defaults={style:'minimal',backgroundColor:'#0e1317',backgroundOpacity:70};
  function normalize(value){value=value||{};return {
    style:styles.indexOf(value.style)>=0?value.style:defaults.style,
@@ -224,7 +242,7 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
  function mount(db,panel){
    var ru=(navigator.language||'').toLowerCase().indexOf('ru')===0;
    var section=document.createElement('section');section.className='appearance-settings';
-   section.innerHTML='<h2>'+(ru?'Оформление одометра':'Odometer appearance')+'</h2><label for="appearance-style">'+(ru?'Стиль':'Style')+'</label><select id="appearance-style"><option value="minimal">'+(ru?'Минималистичный':'Minimal')+'</option><option value="electronic">'+(ru?'Электронный · пиксели':'Electronic · pixels')+'</option><option value="mechanical">'+(ru?'Механический · колёсики':'Mechanical · wheels')+'</option></select><p class="appearance-help"></p><div class="appearance-preview"><section class="meter" aria-label="Appearance preview"><div class="reading"><div class="digits"></div><span class="unit">km</span></div></section></div><p class="note">'+(ru?'Предпросмотр на вымышленных данных. Выбор сохраняется автоматически для всех машин и открытых виджетов в этом профиле Kapps.':'Preview uses synthetic mileage. Selection is saved automatically for all cars and open widgets in this Kapps profile.')+'</p><p class="appearance-message" role="status"></p>';
+   section.innerHTML='<h2>'+(ru?'Оформление одометра':'Odometer appearance')+'</h2><label for="appearance-style">'+(ru?'Стиль':'Style')+'</label><select id="appearance-style"><option value="minimal">'+(ru?'Минималистичный':'Minimal')+'</option><option value="electronic">'+(ru?'Электронный · пиксели':'Electronic · pixels')+'</option><option value="mechanical">'+(ru?'Механический · колёсики':'Mechanical · wheels')+'</option><option value="iracing">'+(ru?'iRacing · классический':'iRacing · classic')+'</option></select><p class="appearance-help"></p><div class="appearance-preview"><section class="meter" aria-label="Appearance preview"><div class="reading"><div class="digits"></div><span class="unit">km</span></div></section></div><p class="note">'+(ru?'Предпросмотр на вымышленных данных. Выбор сохраняется автоматически для всех машин и открытых виджетов в этом профиле Kapps.':'Preview uses synthetic mileage. Selection is saved automatically for all cars and open widgets in this Kapps profile.')+'</p><p class="appearance-message" role="status"></p>';
    panel.insertBefore(section,panel.querySelector('.demo-controls'));
    var select=section.querySelector('select'),message=section.querySelector('.appearance-message'),render=root.createOdometerRenderer(section.querySelector('.meter'));
    var controls=document.createElement('div');controls.className='background-controls';
@@ -242,14 +260,15 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
    function help(style){section.querySelector('.appearance-help').textContent=({
      minimal:ru?'Плавная прокрутка цифр каждые 100 метров.':'Digits roll every 100 metres.',
      electronic:ru?'Изменившаяся цифра кратко мигает. Редкое подмигивание части цифры — раз в 5–10 минут, не чаще одного раза за 5 минут.':'Changed digits blink briefly. A small part of one digit flickers every 5–10 minutes, never more than once per 5 minutes.',
+     iracing:ru?'Палитра из референса iRacing: тёмный фон, белые цифры и жёлтые акценты. Выбор стиля устанавливает фон #232633, сохраняя opacity.':'Palette matched to the iRacing reference: charcoal, white digits and yellow accents. Selecting this style sets background #232633 and preserves opacity.',
      mechanical:ru?'Колёсико 100 м вращается непрерывно по пройденному расстоянию. Километры переключаются после накопления целого километра.':'The 100 m wheel rolls continuously with measured distance. Kilometre wheels advance when a whole kilometre is reached.'
    })[style];}
    read(db).then(function(value){current=value;ready=true;sync();inputs.forEach(function(input){input.disabled=false;});}).catch(function(e){message.textContent=e.message;});
-   select.onchange=function(){update({style:select.value});};
+   select.onchange=function(){var patch={style:select.value};if(select.value==='iracing')patch.backgroundColor='#232633';update(patch);};
    color.oninput=color.onchange=function(){hex.setCustomValidity('');update({backgroundColor:color.value});};
    hex.oninput=function(){if(/^#[0-9a-f]{6}$/i.test(hex.value)){hex.setCustomValidity('');update({backgroundColor:hex.value});}else hex.setCustomValidity(ru?'Введите цвет в формате #12ab34':'Use a colour such as #12ab34');};
    opacity.oninput=opacity.onchange=function(){update({backgroundOpacity:Number(opacity.value)});};
-   reset.onclick=function(){hex.setCustomValidity('');update({backgroundColor:defaults.backgroundColor,backgroundOpacity:defaults.backgroundOpacity});};
+   reset.onclick=function(){hex.setCustomValidity('');update({backgroundColor:current.style==='iracing'?'#232633':defaults.backgroundColor,backgroundOpacity:defaults.backgroundOpacity});};
    render({meters:meters,car_key:'appearance-preview'});
    var timer=setInterval(function(){var now=performance.now();meters+=30*Math.min((now-last)/1000,.25);last=now;render({meters:meters,car_key:'appearance-preview'});},100);
    window.addEventListener('pagehide',function(){clearInterval(timer);render.destroy();},{once:true});
@@ -257,7 +276,7 @@ body.overlay-page{padding:0;overflow:hidden;width:100vw;height:100vh}
  root.KappsAppearance={normalize:normalize,read:read,save:save,watch:watch,mount:mount,claimFlicker:claimFlicker};
 })(window);
 
-/* Three renderers share the same measured distance; visuals never change totals. */
+/* Four styles share the same measured distance; visuals never change totals. */
 window.createOdometerRenderer = function(meter){
  'use strict';
  meter=meter||document.querySelector('.meter');
@@ -299,7 +318,7 @@ window.createOdometerRenderer = function(meter){
      var el=document.createElement('span');
      if(text[i]==='.'){
        el.className=style==='electronic'?'pixel-point':style==='mechanical'?'wheel-separator':'point';
-       if(style==='minimal')el.textContent='.';
+       if(style==='minimal'||style==='iracing')el.textContent='.';
        cells.push(null);digits.appendChild(el);continue;
      }
      if(style==='electronic'){
@@ -379,7 +398,7 @@ window.createOdometerRenderer = function(meter){
    },300000+Math.floor(Math.random()*300000));
  }
  render.setStyle=function(value){
-   if(['minimal','electronic','mechanical'].indexOf(value)<0)value='minimal';
+   if(['minimal','electronic','mechanical','iracing'].indexOf(value)<0)value='minimal';
    if(value===style&&cells.length)return;
    style=value;meter.dataset.style=style;
    if(frame)cancelAnimationFrame(frame);frame=null;clearCells();

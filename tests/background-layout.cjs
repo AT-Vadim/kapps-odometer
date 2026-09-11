@@ -35,7 +35,7 @@ const fs=require('node:fs');
  assert.equal(await run('document.getElementById("background-hex").value'),'#0e1317');assert.equal(await run('document.getElementById("background-opacity").value'),'70');
  const after=await run('KappsOdometer.openDatabase({version:1,cars:{}}).then(KappsOdometer.readTotals)');assert.deepEqual(after,before);
  const managementShot=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync('docs/settings.png',Buffer.from(managementShot.data,'base64'));
- for(const style of ['minimal','electronic','mechanical']){
+ for(const style of ['minimal','electronic','mechanical','iracing']){
    await send('Page.navigate',{url:'http://127.0.0.1:8192/Odometer/?demo=1&style='+style});await wait(200);
    for(const [width,height] of [[370,100],[740,200],[125,30],[160,300],[1200,45]]){
      await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});await wait(120);
@@ -46,5 +46,5 @@ const fs=require('node:fs');
      assert.ok(box.scroll<=width,'no horizontal scrollbar');
    }
  }
- assert.deepEqual(errors,[]);socket.close();console.log('Background/layout checks passed: legacy settings migration, colour/alpha persistence, live sync, 0/100% opacity, opaque digits, reset, 15 style/size combinations, statistics not scaled, mileage unchanged.');
+ assert.deepEqual(errors,[]);socket.close();console.log('Background/layout checks passed: legacy settings migration, colour/alpha persistence, live sync, 0/100% opacity, opaque digits, reset, 20 style/size combinations, statistics not scaled, mileage unchanged.');
 })().catch(e=>{console.error(e);process.exit(1);});

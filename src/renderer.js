@@ -1,4 +1,4 @@
-/* Three renderers share the same measured distance; visuals never change totals. */
+/* Four styles share the same measured distance; visuals never change totals. */
 window.createOdometerRenderer = function(meter){
  'use strict';
  meter=meter||document.querySelector('.meter');
@@ -40,7 +40,7 @@ window.createOdometerRenderer = function(meter){
      var el=document.createElement('span');
      if(text[i]==='.'){
        el.className=style==='electronic'?'pixel-point':style==='mechanical'?'wheel-separator':'point';
-       if(style==='minimal')el.textContent='.';
+       if(style==='minimal'||style==='iracing')el.textContent='.';
        cells.push(null);digits.appendChild(el);continue;
      }
      if(style==='electronic'){
@@ -120,7 +120,7 @@ window.createOdometerRenderer = function(meter){
    },300000+Math.floor(Math.random()*300000));
  }
  render.setStyle=function(value){
-   if(['minimal','electronic','mechanical'].indexOf(value)<0)value='minimal';
+   if(['minimal','electronic','mechanical','iracing'].indexOf(value)<0)value='minimal';
    if(value===style&&cells.length)return;
    style=value;meter.dataset.style=style;
    if(frame)cancelAnimationFrame(frame);frame=null;clearCells();

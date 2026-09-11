@@ -86,6 +86,11 @@
      panel.querySelector('#export').textContent='Скачать копию';panel.querySelector('#import').textContent='Импорт JSON';
      panel.querySelector('.note').textContent='Открывайте эту страницу в том же профиле Kapps, где работает одометр. Импорт объединяет записи и сохраняет больший пробег каждой машины.';
    }
+   var setup=document.createElement('aside');setup.className='setup-help';
+   setup.innerHTML=(navigator.language||'').toLowerCase().indexOf('ru')===0
+     ? '<p><strong>Как включить управление в Kapps</strong></p><p>В режиме Open in a Window переключитесь на окно Racing Overlay через Alt+Tab. Нажмите Edit на одометре, увеличьте область примерно до 800 × 850 px и нажмите Apply. После Apply можно нажимать элементы этой страницы; окно Racing Overlay должно оставаться активным.</p><p>В режиме Open in iRacing сначала нажмите Ctrl+K, затем увеличьте область через Edit → Apply. После настройки верните URL без ?manage=1 и размер одометра. Если клики не работают, проверьте, что нажали Apply, и снова активируйте Racing Overlay.</p>'
+     : '<p><strong>Enable interaction in Kapps</strong></p><p>With Open in a Window, use Alt+Tab to focus Racing Overlay. Click Edit on the odometer, enlarge it to about 800 × 850 px, then click Apply. After Apply, the controls on this page are clickable; keep Racing Overlay focused.</p><p>With Open in iRacing, first press Ctrl+K, then resize through Edit → Apply. After setup, restore the URL without ?manage=1 and the odometer size. If clicks do not work, check that you clicked Apply and focus Racing Overlay again.</p>';
+   panel.insertBefore(setup,panel.querySelector('.demo-controls'));
    document.body.appendChild(panel);
    if(root.KappsAppearance)root.KappsAppearance.mount(db,panel);
    function list(){readTotals(db).then(function(totals){var box=document.getElementById('cars');box.innerHTML='';Object.keys(totals.cars).sort().forEach(function(key){var car=totals.cars[key],row=document.createElement('p');row.textContent=car.name+' — '+(car.meters/1000).toFixed(3)+' km';box.appendChild(row);});}).catch(error);}
